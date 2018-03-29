@@ -5,15 +5,12 @@
 	let banner=document.querySelector("#banner");
 	let next=document.querySelector(".next");
 	let prev=document.querySelector(".prev");
-	// console.log(imgs);
-	// console.log(pager);
 	pagers.forEach(function(ele,index){
 		ele.onmouseenter=function(){
 			for(let i=0;i<imgs.length;i++){
 				imgs[i].classList.remove("active");
 				pagers[i].classList.remove("active");
 			}
-			//this ele pagers[index]
 			this.classList.add("active");
 			imgs[index].classList.add("active");
 			n=index;
@@ -33,7 +30,6 @@
  				pagers[i].classList.remove("active");
  				imgs[i].classList.remove("active");
 			}
-			//this ele pagers[index]
 			imgs[n].classList.add("active");
 			pagers[n].classList.add("active");
 	}
@@ -43,13 +39,25 @@
 	banner.onmouseleave=function(){
 		t=setInterval(move,3000);
 	}
+	let flag=true;
 	next.onclick=function(){
-		move();
+		if(flag){
+			flag=false;
+			move();
+		}
 	}
 	prev.onclick=function(){
-		n-=2;
-		move();
+		if(flag){
+			flag=false;
+			n-=2;
+			move();
+		}
 	}
+	imgs.forEach(function(ele,index){
+		ele.addEventListener("transitionend",function(){
+			flag=true;
+		})
+	})
 }
 
 //侧边
@@ -168,12 +176,14 @@
 	}
 
 }
+
 //左边浮动
-{
-	let tips=document.querySelectorAll(".floatbar_item");
+ {	let tips=document.querySelectorAll(".floatbar_item");
 	let containers=document.querySelectorAll(".container");
+	// let flag=true;
 		tips.forEach(function(ele,index){
 			ele.onclick=function(){
+				// flag=false;
 				let ot=containers[index].offsetTop-50;
 				document.documentElement.scrollTop=ot;
 				let now=document.documentElement.scrollTop;
@@ -184,12 +194,14 @@
 					now+=speed;
 					if(time===200){
 						clearInterval(t);
+						// flag=true;
 					}
 					document.documentElement.scrollTop=now;
 				},25)
 			}
 		});
 		window.addEventListener("scroll",function(){
+			// if(flag){
 			let st=document.documentElement.scrollTop;
 			for(i=0;i<containers.length;i++){
 				if(st>containers[i].offsetTop-530){
@@ -200,7 +212,8 @@
 
 				}
 			}
-		});
+		// }
+	});
 	let totop=document.querySelector(".float_totop");
 	totop.onclick=function(){
 		let st=document.documentElement.scrollTop;
@@ -281,23 +294,37 @@
 		let next=document.querySelector(".hui_next .hui_btn1");
 		let inner=document.querySelector(".hui_inner");
 		let contents=document.querySelectorAll(".hui_ye");
-		let n=0;
+		let n=1;
+		let flag=true;
 		next.onclick=function(){
+			if(flag){
+				flag=false;
 			n++;
-			if(n===contents.length){
-				n=contents.length-1;
-				return;
-			}
+			inner.style.transition="all 1s";
 			inner.style.marginLeft=n*-1000+"px";
 		}
+	}
 		prev.onclick=function(){
+			if(flag){
+				flag=false;
 			n--;
-			if(n<0){
-				n=0;
-				return;
-			}
+			inner.style.transition="all 1s";
 			inner.style.marginLeft=n*-1000+"px";
 		}
+	}
+		inner.addEventListener("transitionend",function(){
+			flag=true;
+			if(n===4){
+				inner.style.transition="none";
+				inner.style.marginLeft="-1000px";
+				n=1;
+			}
+			if(n===0){
+				inner.style.transition="none";
+				inner.style.marginLeft="-3000px";
+				n=3;	
+			}
+		})
 }
 
 //视频
@@ -306,46 +333,131 @@
 		let next=document.querySelector(".shipin_jiantou1");
 		let inner=document.querySelector(".shipin_inner");
 		let contents=document.querySelectorAll(".shipin_ye");
-		let n=0;
+		let item=document.querySelectorAll(".right_shipin1");
+		let shipin=document.querySelectorAll(".shipin_content img");
+		let n=1;
+		let flag=true;
 		next.onclick=function(){
-			n++;
-			if(n===contents.length){
-				n=contents.length-1;
-				return;
+				if(flag){
+					flag=false;
+				n++;
+				inner.style.transition="all 1s";
+				inner.style.marginLeft=n*-390+"px";
 			}
-			inner.style.marginLeft=n*-390+"px";
 		}
 		prev.onclick=function(){
-			n--;
-			if(n<0){
-				n=0;
-				return;
+				if(flag){
+					flag=false;
+				n--;
+				inner.style.transition="all 1s";
+				inner.style.marginLeft=n*-390+"px";
 			}
-			inner.style.marginLeft=n*-390+"px";
 		}
+		inner.addEventListener("transitionend",function(){
+			flag=true;
+			if(n===3){
+				inner.style.transition="none";
+				inner.style.marginLeft="-390px";
+				n=1;
+			}
+			if(n===0){
+				inner.style.transition="none";
+				inner.style.marginLeft="-780px";
+				n=2;	
+			}
+		})
+		item.forEach(function(ele,index){
+			ele.onmouseenter=function(){
+				for(let i=0;i<shipin.length;i++){
+					shipin[i].classList.remove("active");
+				}
+				shipin[index].classList.add("active");
+			}
+	})
 }
 
 //抢购
 {	
-		let prev=document.querySelector(".pingou_btn .pingou_btn1");
-		let next=document.querySelector(".pingou_btn2 .pingou_btn1");
+		let prev=document.querySelector(".pingou_btn");
+		let next=document.querySelector(".pingou_btn2");
 		let inner=document.querySelector(".qianggou_inner");
 		let contents=document.querySelectorAll(".qianggou_ye");
-		let n=0;
+		let n=1;
+		let flag=true;
 		next.onclick=function(){
+			if(flag){
+				flag=false;
 			n++;
-			if(n===contents.length){
-				n=contents.length-1;
-				return;
-			}
+			inner.style.transition="all 1s";
 			inner.style.marginLeft=n*-590+"px";
 		}
+	}
 		prev.onclick=function(){
+			if(flag){
+				flag=false;
 			n--;
-			if(n<0){
-				n=0;
-				return;
-			}
+			inner.style.transition="all 1s";
 			inner.style.marginLeft=n*-590+"px";
 		}
+	}
+		inner.addEventListener("transitionend",function(){
+			flag=true;
+			if(n===4){
+				inner.style.transition="none";
+				inner.style.marginLeft="-590px";
+				n=1;
+			}
+			if(n===0){
+				inner.style.transition="none";
+				inner.style.marginLeft="-1770px";
+				n=3;	
+			}
+		})
+}
+
+//banner下拉
+{
+	let box=document.querySelector(".wangzhan_tol");
+	let top=document.querySelector(".head_wenzi");
+	let bottom=document.querySelector(".wangzhan_menu");
+	let xuanzhuan=document.querySelector(".head_xiala");
+	box.onmouseenter=function(){
+		bottom.style.display="block";
+		top.style.backgroundColor="#fff";
+		bottom.style.backgroundColor="#fff";
+		top.style.border="1px solid #ccc";
+		bottom.style.border="1px solid #ccc";
+		xuanzhuan.style.transform="rotateX(180deg)";
+	}
+	box.onmouseleave=function(){
+		bottom.style.display="none";
+		top.style.backgroundColor="";
+		top.style.border="";
+		xuanzhuan.style.transform="";
+	}
+}
+
+//新闻部分
+{
+	let inner=document.querySelector(".xinwen_inner");
+	let contents=document.querySelectorAll(".xinwen_ye");
+	let n=1;
+	let t=setInterval(move,3000);
+	function move(){
+		n++;
+		inner.style.transition="all 1s";
+		inner.style.marginTop=n*-117+"px";
+	}
+	inner.addEventListener("transitionend",function(){
+		if(n===3){
+			inner.style.transition="none";
+			inner.style.marginTop="-117px";
+			n=1;
+		}
+		if(n===0){
+			inner.style.transition="none";
+			inner.style.marginTop="-351px";
+			n=2;
+		}
+	})
 }
